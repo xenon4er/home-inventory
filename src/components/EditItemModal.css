@@ -1,0 +1,12 @@
+.modal-loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--gray-600);
+}
+
+/* Переиспользуем стили из AddItemModal.css */
+/* Если нужно добавить что-то специфичное для редактирования */
+
+.edit-item-modal .photo-preview img {
+  max-height: 150px;
+}
