@@ -6,9 +6,11 @@ import { AddItemModal } from "./components/AddItemModal";
 import { SearchBar } from "./components/SearchBar";
 import { CategoryFilter } from "./components/CategoryFilter";
 import { DataManager } from "./components/DataManager";
+import { ThemeToggle } from "./components/ThemeToggle";
+import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
 
-function App() {
+function AppContent() {
   const { items, isLoading, loadItems, searchQuery, selectedCategory } =
     useInventoryStore();
 
@@ -37,7 +39,15 @@ function App() {
 
   return (
     <div className="app">
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "var(--bg-secondary)",
+            color: "var(--text-primary)",
+          },
+        }}
+      />
 
       <header className="header">
         <div className="container">
@@ -97,11 +107,21 @@ function App() {
         onDataCleared={handleDataCleared}
       />
 
+      <ThemeToggle />
+
       <AddItemModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,5 @@
 .item-card {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -12,7 +12,7 @@
 
 .item-photo {
   height: 12rem;
-  background: var(--gray-200);
+  background: var(--bg-tertiary);
   cursor: pointer;
   overflow: hidden;
 }
@@ -25,11 +25,11 @@
 
 .item-photo-placeholder {
   height: 12rem;
-  background: var(--gray-200);
+  background: var(--bg-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray-400);
+  color: var(--text-tertiary);
   font-size: 2rem;
 }
 
@@ -41,6 +41,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .item-details {
@@ -55,11 +56,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--gray-600);
+  color: var(--text-secondary);
 }
 
 .item-category {
-  background: var(--gray-100);
+  background: var(--bg-tertiary);
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -67,7 +68,7 @@
 
 .item-date {
   font-size: 0.75rem;
-  color: var(--gray-400);
+  color: var(--text-tertiary);
   margin-top: 0.25rem;
 }
 
@@ -83,7 +84,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 1000;
   display: flex;
   align-items: center;
