@@ -10,12 +10,13 @@
 }
 
 .modal-container {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: var(--radius);
   max-width: 28rem;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: var(--shadow-lg);
 }
 
 .modal-header {
@@ -23,11 +24,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-header h2 {
   font-size: 1.25rem;
+  color: var(--text-primary);
 }
 
 .modal-close-btn {
@@ -35,7 +37,11 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--gray-500);
+  color: var(--text-tertiary);
+}
+
+.modal-close-btn:hover {
+  color: var(--text-primary);
 }
 
 .modal-form {
@@ -51,6 +57,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.25rem;
+  color: var(--text-primary);
 }
 
 .modal-actions {
@@ -62,8 +69,6 @@
 .modal-actions .btn {
   flex: 1;
 }
-
-/* Добавьте эти стили к существующим */
 
 .photo-upload-area {
   position: relative;
@@ -84,17 +89,17 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: var(--gray-100);
+  background: var(--bg-tertiary);
   border-radius: var(--radius);
   font-size: 0.875rem;
-  color: var(--gray-600);
+  color: var(--text-secondary);
 }
 
 .spinner {
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  border: 2px solid var(--gray-300);
+  border: 2px solid var(--border);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
@@ -105,15 +110,13 @@
 }
 
 .photo-preview {
-  position: relative;
   margin-top: 0.5rem;
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
 .photo-preview img {
-  border-radius: var(--radius);
   width: 100%;
   height: auto;
   max-height: 200px;
@@ -125,18 +128,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
-  background: var(--gray-50);
+  background: var(--bg-tertiary);
   font-size: 0.75rem;
 }
 
 .photo-size {
-  color: var(--gray-600);
+  color: var(--text-secondary);
 }
 
 .photo-remove {
-  position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
   background: var(--danger);
   color: white;
   border: none;
@@ -153,6 +153,21 @@
 
 .photo-hint {
   margin-top: 0.5rem;
-  color: var(--gray-500);
+  color: var(--text-tertiary);
   font-size: 0.75rem;
+}
+
+select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+input::placeholder {
+  color: var(--text-tertiary);
 }

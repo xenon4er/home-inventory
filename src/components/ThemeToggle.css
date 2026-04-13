@@ -1,0 +1,34 @@
+.theme-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  background: var(--bg-tertiary);
+}
+
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: 1rem;
+    left: 4rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+}
