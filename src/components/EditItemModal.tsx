@@ -3,6 +3,7 @@ import { type Item } from "../db/db";
 import { useInventoryStore } from "../store/inventoryStore";
 import { savePhoto, loadPhoto, deletePhoto } from "../utils/imageStorage";
 import toast from "react-hot-toast";
+import { CameraModal } from "./CameraModal";
 import "./EditItemModal.css";
 
 interface Props {
@@ -23,6 +24,7 @@ export const EditItemModal = ({ isOpen, onClose, item }: Props) => {
   const [newCategory, setNewCategory] = useState("");
   const [isCompressing, setIsCompressing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Загружаем данные предмета при открытии
@@ -50,10 +52,7 @@ export const EditItemModal = ({ isOpen, onClose, item }: Props) => {
 
   if (!isOpen || !item) return null;
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handlePhotoUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast.error("Пожалуйста, выберите изображение");
       return;
@@ -87,6 +86,17 @@ export const EditItemModal = ({ isOpen, onClose, item }: Props) => {
     } finally {
       setIsCompressing(false);
     }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handlePhotoUpload(file);
+    }
+  };
+
+  const handleCameraCapture = (file: File) => {
+    handlePhotoUpload(file);
   };
 
   const handleRemovePhoto = async () => {
@@ -131,130 +141,149 @@ export const EditItemModal = ({ isOpen, onClose, item }: Props) => {
   const existingCategories = categories.filter((c) => c !== "all");
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>✏️ Редактировать предмет</h2>
-          <button className="modal-close-btn" onClick={onClose}>
-            ×
-          </button>
-        </div>
+    <>
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2>✏️ Редактировать предмет</h2>
+            <button className="modal-close-btn" onClick={onClose}>
+              ×
+            </button>
+          </div>
 
-        {isLoading ? (
-          <div className="modal-loading">Загрузка...</div>
-        ) : (
-          <form onSubmit={handleSubmit} className="modal-form">
-            <div className="form-group">
-              <label>Название *</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                placeholder="Например: Дрель Makita"
-                autoFocus
-              />
-            </div>
+          {isLoading ? (
+            <div className="modal-loading">Загрузка...</div>
+          ) : (
+            <form onSubmit={handleSubmit} className="modal-form">
+              <div className="form-group">
+                <label>Название *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  placeholder="Например: Дрель Makita"
+                  autoFocus
+                />
+              </div>
 
-            <div className="form-group">
-              <label>Где лежит? *</label>
-              <input
-                type="text"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, location: e.target.value }))
-                }
-                placeholder="Например: Красный ящик в гараже"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Категория *</label>
-              {existingCategories.length > 0 && (
-                <select
-                  value={formData.category}
-                  onChange={(e) => {
+              <div className="form-group">
+                <label>Где лежит? *</label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      category: e.target.value,
-                    }));
-                    setNewCategory("");
-                  }}
-                >
-                  <option value="">Выберите категорию</option>
-                  {existingCategories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              )}
+                      location: e.target.value,
+                    }))
+                  }
+                  placeholder="Например: Красный ящик в гараже"
+                />
+              </div>
 
-              <input
-                type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Или введите новую категорию"
-                className="mt-2"
-              />
-            </div>
+              <div className="form-group">
+                <label>Категория *</label>
+                {existingCategories.length > 0 && (
+                  <select
+                    value={formData.category}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        category: e.target.value,
+                      }));
+                      setNewCategory("");
+                    }}
+                  >
+                    <option value="">Выберите категорию</option>
+                    {existingCategories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                )}
 
-            <div className="form-group">
-              <label>Фото</label>
-              <div className="photo-upload-area">
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="Или введите новую категорию"
+                  className="mt-2"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Фото</label>
+                <div className="photo-options">
+                  <button
+                    type="button"
+                    className="photo-option-btn"
+                    onClick={() => setShowCamera(true)}
+                  >
+                    📸 Сделать фото
+                  </button>
+                  <button
+                    type="button"
+                    className="photo-option-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    📁 Выбрать файл
+                  </button>
+                </div>
+
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handlePhotoUpload}
+                  onChange={handleFileSelect}
                   ref={fileInputRef}
-                  disabled={isCompressing}
-                  className="photo-input"
+                  style={{ display: "none" }}
                 />
-                {isCompressing && (
-                  <div className="compressing-indicator">
-                    <span className="spinner"></span>
-                    <span>Сжатие фото...</span>
+
+                {photoPreview && (
+                  <div className="photo-preview">
+                    <img src={photoPreview} alt="Preview" />
+                    <div className="photo-info">
+                      <span className="photo-size">Фото</span>
+                      <button
+                        type="button"
+                        className="photo-remove"
+                        onClick={handleRemovePhoto}
+                      >
+                        Удалить фото
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {photoPreview && (
-                <div className="photo-preview">
-                  <img src={photoPreview} alt="Preview" />
-                  <div className="photo-info">
-                    <span className="photo-size">Фото</span>
-                    <button
-                      type="button"
-                      className="photo-remove"
-                      onClick={handleRemovePhoto}
-                    >
-                      Удалить фото
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="modal-actions">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={onClose}
-              >
-                Отмена
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isCompressing}
-              >
-                Сохранить
-              </button>
-            </div>
-          </form>
-        )}
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={onClose}
+                >
+                  Отмена
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isCompressing}
+                >
+                  Сохранить
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
-    </div>
+
+      <CameraModal
+        isOpen={showCamera}
+        onClose={() => setShowCamera(false)}
+        onCapture={handleCameraCapture}
+      />
+    </>
   );
 };
