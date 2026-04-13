@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { type Item } from "../db/db";
 import { useInventoryStore } from "../store/inventoryStore";
 import { loadPhoto, deletePhoto } from "../utils/imageStorage";
+import { EditItemModal } from "./EditItemModal";
 import toast from "react-hot-toast";
 import "./ItemCard.css";
 
@@ -14,6 +15,7 @@ export const ItemCard = ({ item }: Props) => {
   const [showFullPhoto, setShowFullPhoto] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const loadPhotoAsync = useCallback(async () => {
     if (!item.photoId) {
@@ -48,6 +50,14 @@ export const ItemCard = ({ item }: Props) => {
     }
   };
 
+  const handleEdit = () => {
+    setShowEditModal(true);
+  };
+
+  const handleEditClose = () => {
+    setShowEditModal(false);
+  };
+
   return (
     <>
       <div className="item-card">
@@ -79,12 +89,7 @@ export const ItemCard = ({ item }: Props) => {
           </div>
 
           <div className="item-actions">
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                /* Редактирование */
-              }}
-            >
+            <button className="btn btn-secondary" onClick={handleEdit}>
               ✏️ Редактировать
             </button>
             <button className="btn btn-danger" onClick={handleDelete}>
@@ -107,6 +112,12 @@ export const ItemCard = ({ item }: Props) => {
           </div>
         </div>
       )}
+
+      <EditItemModal
+        isOpen={showEditModal}
+        onClose={handleEditClose}
+        item={item}
+      />
     </>
   );
 };
