@@ -46,22 +46,3 @@
   color: white;
   border-color: var(--primary);
 }
-
-@media (max-width: 768px) {
-  .modal-container {
-    max-width: 95%;
-    max-height: 85vh;
-  }
-  
-  .modal-header h2 {
-    font-size: 1.125rem;
-  }
-  
-  .modal-form {
-    padding: 1rem;
-  }
-  
-  .form-group {
-    margin-bottom: 0.75rem;
-  }
-}
