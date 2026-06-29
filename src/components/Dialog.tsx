@@ -7,6 +7,8 @@ interface DialogProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
 }
 
 export const Dialog: React.FC<DialogProps> = ({
@@ -14,6 +16,8 @@ export const Dialog: React.FC<DialogProps> = ({
   onClose,
   title,
   children,
+  className,
+  contentClassName,
 }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -57,14 +61,23 @@ export const Dialog: React.FC<DialogProps> = ({
   if (!isOpen) return null;
 
   return (
-    <dialog ref={dialogRef} className="app-dialog">
+    <dialog
+      ref={dialogRef}
+      className={className ? `app-dialog ${className}` : "app-dialog"}
+    >
       <div className="dialog-header">
         <h2>{title}</h2>
         <button className="dialog-close" onClick={onClose} aria-label="Закрыть">
           ×
         </button>
       </div>
-      <div className="dialog-content">{children}</div>
+      <div
+        className={
+          contentClassName ? `dialog-content ${contentClassName}` : "dialog-content"
+        }
+      >
+        {children}
+      </div>
     </dialog>
   );
 };

@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import Webcam from "react-webcam";
 import toast from "react-hot-toast";
+import { Dialog } from "./Dialog";
 import "./CameraModal.css";
 
 interface Props {
@@ -21,7 +22,6 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: Props) => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
       setIsLoading(true);
-      // Конвертируем base64 в File
       fetch(imageSrc)
         .then((res) => res.blob())
         .then((blob) => {
@@ -68,68 +68,62 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: Props) => {
     console.error("Camera error:", error);
   }, []);
 
-  // Если модальное окно закрыто, не рендерим содержимое
-  if (!isOpen) return null;
-
   return (
-    <div className="camera-overlay" onClick={onClose}>
-      <div className="camera-container" onClick={(e) => e.stopPropagation()}>
-        <div className="camera-header">
-          <h3>Сделать фото</h3>
-          <button className="camera-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Сделать фото"
+      className="camera-dialog"
+      contentClassName="camera-dialog-content"
+    >
+      {hasCamera ? (
+        <>
+          <div className="camera-preview">
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              screenshotQuality={0.8}
+              onUserMediaError={handleUserMediaError}
+              videoConstraints={{
+                facingMode: facingMode,
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+              }}
+              className="webcam"
+            />
+          </div>
 
-        {hasCamera ? (
-          <>
-            <div className="camera-preview">
-              <Webcam
-                audio={false}
-                ref={webcamRef}
-                screenshotFormat="image/jpeg"
-                screenshotQuality={0.8}
-                onUserMediaError={handleUserMediaError}
-                videoConstraints={{
-                  facingMode: facingMode,
-                  width: { ideal: 1280 },
-                  height: { ideal: 720 },
-                }}
-                className="webcam"
-              />
-            </div>
-
-            <div className="camera-actions">
-              <button
-                className="camera-switch"
-                onClick={switchCamera}
-                disabled={isLoading}
-              >
-                🔄 Переключить камеру
-              </button>
-              <button
-                className="camera-capture"
-                onClick={capture}
-                disabled={isLoading}
-              >
-                {isLoading ? "⏳ Обработка..." : "📸 Снять"}
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="camera-error">
-            <p>❌ Не удалось получить доступ к камере</p>
-            <p className="camera-error-hint">
-              Убедитесь, что вы разрешили доступ к камере
-              <br />
-              или используйте загрузку файла
-            </p>
-            <button className="btn btn-primary" onClick={onClose}>
-              Понятно
+          <div className="camera-actions">
+            <button
+              className="camera-switch"
+              onClick={switchCamera}
+              disabled={isLoading}
+            >
+              🔄 Переключить камеру
+            </button>
+            <button
+              className="camera-capture"
+              onClick={capture}
+              disabled={isLoading}
+            >
+              {isLoading ? "⏳ Обработка..." : "📸 Снять"}
             </button>
           </div>
-        )}
-      </div>
-    </div>
+        </>
+      ) : (
+        <div className="camera-error">
+          <p>❌ Не удалось получить доступ к камере</p>
+          <p className="camera-error-hint">
+            Убедитесь, что вы разрешили доступ к камере
+            <br />
+            или используйте загрузку файла
+          </p>
+          <button className="btn btn-primary" onClick={onClose}>
+            Понятно
+          </button>
+        </div>
+      )}
+    </Dialog>
   );
 };
